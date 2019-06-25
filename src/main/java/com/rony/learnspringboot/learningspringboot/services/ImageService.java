@@ -3,11 +3,14 @@ package com.rony.learnspringboot.learningspringboot.services;
 import com.rony.learnspringboot.learningspringboot.model.Image;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Bean;
+import org.springframework.core.io.Resource;
 import org.springframework.core.io.ResourceLoader;
+import org.springframework.http.codec.multipart.FilePart;
 import org.springframework.stereotype.Service;
 import org.springframework.util.FileCopyUtils;
 import org.springframework.util.FileSystemUtils;
 import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
 
 import java.io.File;
 import java.io.FileWriter;
@@ -49,6 +52,24 @@ public class ImageService {
         } catch (IOException e) {
             return Flux.empty();
         }
+    }
+
+    public Mono<Resource> findOneImage(String filename) {
+        return Mono.fromSupplier(() -> resourceLoader.getResource("file:" + UPLOAD_ROOT + "/" + filename));
+    }
+
+    public Mono<Void> createImage(Flux<FilePart> files) {
+        return files.flatMap(file -> file.transferTo(Paths.get(UPLOAD_ROOT, file.filename()).toFile())).then();
+    }
+
+    public Mono<Void> deleteImage(String filename) {
+        return Mono.fromRunnable(() -> {
+            try{
+                Files.deleteIfExists(Paths.get(UPLOAD_ROOT, filename));
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+        });
     }
 
 }
