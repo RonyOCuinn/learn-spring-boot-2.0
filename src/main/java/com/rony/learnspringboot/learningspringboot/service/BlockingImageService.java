@@ -1,4 +1,4 @@
-package com.rony.learnspringboot.learningspringboot.services;
+package com.rony.learnspringboot.learningspringboot.service;
 
 import com.rony.learnspringboot.learningspringboot.model.Image;
 import org.springframework.core.io.Resource;

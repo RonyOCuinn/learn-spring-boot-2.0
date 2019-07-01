@@ -18,9 +18,9 @@ public class Controller {
     @GetMapping(API_BASE_BATH + "/images")
     Flux<Image> images() {
         return Flux.just(
-                new Image(1, "learnSpring.jpg"),
-                new Image(2, "learnSpringBoot2.jpg"),
-                new Image(3, "hello.jpg")
+                new Image("1", "learnSpring.jpg"),
+                new Image("2", "learnSpringBoot2.jpg"),
+                new Image("3", "hello.jpg")
         );
     }
 

@@ -1,6 +1,6 @@
 package com.rony.learnspringboot.learningspringboot.controller;
 
-import com.rony.learnspringboot.learningspringboot.services.ImageService;
+import com.rony.learnspringboot.learningspringboot.service.ImageService;
 import org.springframework.core.io.InputStreamResource;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;

@@ -1,5 +1,10 @@
 logging:
   level:
+    org:
+      springframework:
+        data: TRACE
+    com:
+      rony: DEBUG
     io:
       netty: DEBUG
-    reactor: DEBUG
+    reactor: TRACE
