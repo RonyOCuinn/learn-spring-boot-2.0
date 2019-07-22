@@ -26,9 +26,11 @@ public class Controller {
 
     @PostMapping(API_BASE_BATH + "/images")
     Mono<Void> create(@RequestBody Flux<Image> images) {
-        return images.map(image -> {
-            log.info("We will save " + image + " to a Reactive database soon!");
-            return image;
-        }).then();
+        return images
+                .map(
+                        image -> {
+                            log.info("We will save " + image + " to a Reactive database soon!");
+                            return image;
+                        }).then();
     }
 }

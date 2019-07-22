@@ -50,51 +50,66 @@ public class ImageService {
     }
 
     public Flux<Image> findAllImages() {
-        return imageRepository.findAll();
+        return imageRepository.findAll()
+                .log("findAll");
     }
 
     public Mono<Resource> findOneImage(String filename) {
-        return Mono.fromSupplier(() -> resourceLoader.getResource("file:" + UPLOAD_ROOT + "/" + filename));
+        return Mono.fromSupplier(() ->
+                resourceLoader.getResource(
+                        "file:" + UPLOAD_ROOT + "/" + filename))
+                .log("findOneImage");
     }
 
     public Mono<Void> createImage(Flux<FilePart> files) {
-        return files.flatMap(file -> {
-            Mono<Image> saveDatabaseImage = imageRepository.save(new Image(
-                    UUID.randomUUID().toString(),
-                    file.filename()));
+        return files.log("createImage-files")
+                .flatMap(file -> {
+                    Mono<Image> saveDatabaseImage = imageRepository.save(
+                            new Image(
+                                    UUID.randomUUID().toString(),
+                                    file.filename()))
+                            .log("createImage-save");
 
                     Mono<Void> copyFile = Mono.just(
                             Paths.get(UPLOAD_ROOT, file.filename())
-                            .toFile())
+                                    .toFile())
                             .log("createImage-picktarget")
                             .map(destFile -> {
                                 try {
                                     destFile.createNewFile();
                                     return destFile;
-                                } catch (IOException e){
+                                } catch (IOException e) {
                                     throw new RuntimeException(e);
                                 }
-                            }).log("createImage-newfile")
+                            })
+                            .log("createImage-newfile")
                             .flatMap(file::transferTo)
                             .log("createImage-copy");
 
                     return Mono.when(saveDatabaseImage, copyFile);
-        }).then();
+                })
+                .log("createImage-flatMap")
+                .then()
+                .log("createImage-done");
     }
 
     public Mono<Void> deleteImage(String filename) {
-        Mono<Void> deleteDatabaseImage = imageRepository.findByName(filename)
-                .flatMap(imageRepository::delete);
+        Mono<Void> deleteDatabaseImage = imageRepository
+                .findByName(filename)
+                .log("deleteImage-find")
+                .flatMap(imageRepository::delete)
+                .log("deleteImage-record");
 
-        Mono<Void> deleteFile = Mono.fromRunnable(() -> {
-            try{
-                Files.deleteIfExists(Paths.get(UPLOAD_ROOT, filename));
-            } catch (IOException e){
+        Mono<Object> deleteFile = Mono.fromRunnable(() -> {
+            try {
+                Files.deleteIfExists(
+                        Paths.get(UPLOAD_ROOT, filename));
+            } catch (IOException e) {
                 throw new RuntimeException(e);
             }
-        });
+        }).log("deleteImage-file");
 
-        return Mono.when(deleteDatabaseImage, deleteFile).then();
+        return Mono.when(deleteDatabaseImage, deleteFile).log("deleteImage-when").then().log("deleteImage-done");
     }
 
 }
