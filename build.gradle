@@ -27,4 +27,6 @@ dependencies {
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 	testImplementation 'io.projectreactor:reactor-test'
 	compile('org.springframework.boot:spring-boot-starter-data-mongodb-reactive')
+	testImplementation('de.flapdoodle.embed:de.flapdoodle.embed.mongo')
+	testImplementation('io.projectreactor:reactor-test')
 }
