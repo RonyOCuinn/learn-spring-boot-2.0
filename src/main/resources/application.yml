@@ -3,9 +3,9 @@ logging:
     web: DEBUG
     org:
       springframework:
-        data: TRACE
+        data: DEBUG
     com:
       rony: DEBUG
     io:
       netty: DEBUG
-    reactor: TRACE
+    reactor: DEBUG

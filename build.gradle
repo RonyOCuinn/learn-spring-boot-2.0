@@ -20,13 +20,24 @@ repositories {
 }
 
 dependencies {
-	implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
 	compile('org.springframework.boot:spring-boot-starter-webflux')
-	compileOnly 'org.projectlombok:lombok'
-	annotationProcessor 'org.projectlombok:lombok'
-	testImplementation 'org.springframework.boot:spring-boot-starter-test'
-	testImplementation 'io.projectreactor:reactor-test'
+	compile('org.synchronoss.cloud:nio-multipart-parser')
 	compile('org.springframework.boot:spring-boot-starter-data-mongodb-reactive')
-	testImplementation('de.flapdoodle.embed:de.flapdoodle.embed.mongo')
-	testImplementation('io.projectreactor:reactor-test')
+	compile("org.springframework.boot:spring-boot-starter-thymeleaf")
+	compile('org.projectlombok:lombok')
+
+	// tag::test-4[]
+	compile("org.seleniumhq.selenium:htmlunit-driver")
+	compile("org.seleniumhq.selenium:selenium-java")
+	// end::test-4[]
+
+	// tag::test-1[]
+	testCompile('org.springframework.boot:spring-boot-starter-test')
+	// end::test-1[]
+	// tag::test-2[]
+	testCompile("io.projectreactor:reactor-test")
+	// end::test-2[]
+	// tag::test-3[]
+	testCompile("de.flapdoodle.embed:de.flapdoodle.embed.mongo")
+	// end::test-3[]
 }

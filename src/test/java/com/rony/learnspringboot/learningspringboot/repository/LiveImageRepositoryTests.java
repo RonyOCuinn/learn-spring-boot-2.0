@@ -5,6 +5,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.mongo.embedded.EmbeddedMongoAutoConfiguration;
 import org.springframework.boot.test.autoconfigure.data.mongo.DataMongoTest;
 import org.springframework.data.mongodb.core.MongoOperations;
 import org.springframework.test.context.junit4.SpringRunner;
@@ -16,27 +17,25 @@ import java.util.ArrayList;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-
 @RunWith(SpringRunner.class)
-@DataMongoTest
-public class EmbeddedImageRepositoryTests {
-
+@DataMongoTest(excludeAutoConfiguration = EmbeddedMongoAutoConfiguration.class)
+public class LiveImageRepositoryTests {
+    
     @Autowired
     ImageRepository imageRepository;
-
     @Autowired
-    MongoOperations operations;
+    MongoOperations mongoOperations;
 
     @Before
     public void setUp() {
-        operations.dropCollection(Image.class);
-        operations.insert(new Image("1",
+        mongoOperations.dropCollection(Image.class);
+        mongoOperations.insert(new Image("1",
                 "learning-spring-boot-cover.jpg"));
-        operations.insert(new Image("2",
+        mongoOperations.insert(new Image("2",
                 "learning-spring-boot-2nd-edition-cover.jpg"));
-        operations.insert(new Image("3",
+        mongoOperations.insert(new Image("3",
                 "pints.jpg"));
-        operations.findAll(Image.class).forEach(image -> {
+        mongoOperations.findAll(Image.class).forEach(image -> {
             System.out.println(image.toString());
         });
 
@@ -71,5 +70,5 @@ public class EmbeddedImageRepositoryTests {
                     return true;
                 });
     }
-
+    
 }
